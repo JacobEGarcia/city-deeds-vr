@@ -1,0 +1,150 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>CITY DEEDS VR</title><script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script><style>
+*{box-sizing:border-box}body{margin:0;background:#08090d;color:#f4eedc;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow:hidden}#hud{position:fixed;z-index:5;inset:0;pointer-events:none}.brand{position:absolute;top:18px;left:22px;font-size:18px;letter-spacing:.22em;font-weight:800}.brand b{color:#ffd447}#turn{position:absolute;top:18px;right:22px;text-align:right;color:#aca99e;font-size:12px}#turn strong{display:block;color:#fff;font-size:16px}#card{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:min(92vw,620px);background:#11131be8;border:1px solid #424654;border-radius:4px;padding:13px 15px;box-shadow:0 15px 60px #000b;pointer-events:auto}#msg{font-size:12px;line-height:1.45;color:#c9c5b8;min-height:36px}.stats{display:flex;gap:9px;margin-top:9px;flex-wrap:wrap}.pill{padding:5px 8px;border:1px solid #343845;color:#999;font-size:11px}.pill b{color:#fff}button{font:700 11px ui-monospace;background:#ffd447;color:#131313;border:0;padding:8px 12px;letter-spacing:.08em;cursor:pointer}button.alt{background:#2a2d38;color:#fff}button:disabled{opacity:.3}#help{position:absolute;left:22px;top:55px;color:#777;font-size:10px;line-height:1.6}#title{position:fixed;z-index:20;inset:0;background:radial-gradient(circle at 50% 38%,#222838 0,#0a0b10 48%,#040507 100%);display:grid;place-items:center;text-align:center;padding:25px}#title .inner{max-width:610px}h1{margin:0;color:#ffd447;font-size:clamp(44px,9vw,92px);letter-spacing:-.09em;line-height:.78;text-shadow:0 5px 0 #7e5d00}h2{font-size:13px;letter-spacing:.38em;color:#ddd;margin:28px 0 10px}.rule{font-size:12px;line-height:1.8;color:#8e8c86;max-width:460px;margin:0 auto 26px}#start{font-size:14px;padding:14px 30px}.sig{position:absolute;bottom:18px;font-size:9px;color:#484a52;letter-spacing:.2em}@media(max-width:600px){#help{display:none}#card{bottom:8px}.brand{top:10px;left:12px}#turn{top:10px;right:12px}}
+</style></head><body><div id="title"><div class="inner"><h1>CITY<br>DEEDS</h1><h2>A LIVING BOARD IN VR</h2><p class="rule">Roll. Circle the city. Buy districts. Build towers. Survive taxes and bankrupt your rivals. Designed for Meta Quest 3, playable on desktop.</p><button id="start">ENTER THE BOARD</button></div><div class="sig">AN ORIGINAL PROPERTY-TRADING GAME</div></div><div id="hud"><div class="brand">CITY <b>DEEDS</b></div><div id="turn"><span>ROUND 1</span><strong>YOUR TURN</strong></div><div id="help">DESKTOP: DRAG TO LOOK · WASD MOVE · CLICK OBJECTS<br>QUEST: ENTER VR · TRIGGER TO SELECT</div><div id="card"><div id="msg">The deed table is waiting.</div><div class="stats"><div class="pill">YOU <b id="cash">$1200</b></div><div class="pill">DEEDS <b id="deeds">0</b></div><div class="pill">RIVALS <b id="rivals">3</b></div><button id="roll">ROLL DICE</button><button class="alt" id="buy" disabled>BUY DEED</button><button class="alt" id="build" disabled>BUILD</button></div></div></div>
+<a-scene id="scene" renderer="antialias:true;colorManagement:true;physicallyCorrectLights:true" background="color:#090b12" shadow="type:pcfsoft" vr-mode-ui="enabled:true" cursor="rayOrigin:mouse" raycaster="objects:.clickable,.tile,#dice">
+<a-assets><a-mixin id="token" geometry="primitive:cylinder;radius:.14;height:.26;segmentsRadial:10" material="metalness:.7;roughness:.2"></a-mixin></a-assets>
+<a-entity light="type:ambient;color:#91a0c8;intensity:.38"></a-entity><a-entity light="type:directional;color:#fff2d0;intensity:1.2;castShadow:true" position="-3 7 4"></a-entity><a-entity light="type:point;color:#ffd447;intensity:1.3;distance:10" position="0 3 0"></a-entity>
+<a-cylinder position="0 -.2 0" radius="7" height=".35" color="#11131a" shadow="receive:true"></a-cylinder><a-cylinder position="0 -.39 0" radius="7.25" height=".08" color="#ffd447" material="emissive:#ffd447;emissiveIntensity:.25"></a-cylinder>
+<a-plane position="0 .01 0" rotation="-90 0 0" width="6.3" height="6.3" color="#20232d" material="roughness:1" shadow="receive:true"></a-plane>
+<a-entity class="tile" data-i="0" position="2.7 .13 2.7" rotation="0 0 0">
+<a-box width="0.98" height=".18" depth="0.98" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#55c2ff" material="emissive:#55c2ff;emissiveIntensity:.18"></a-box>
+<a-text value="OLD DOCK" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$80" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="1" position="1.8 .13 2.7" rotation="0 0 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#55c2ff" material="emissive:#55c2ff;emissiveIntensity:.18"></a-box>
+<a-text value="COPPER ROW" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$105" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="2" position="0.9 .13 2.7" rotation="0 0 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#8be28b" material="emissive:#8be28b;emissiveIntensity:.18"></a-box>
+<a-text value="LANTERN WARD" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$130" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="3" position="0.0 .13 2.7" rotation="0 0 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#c84b51" material="emissive:#c84b51;emissiveIntensity:.18"></a-box>
+<a-text value="TAX OFFICE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$155" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="4" position="-0.9 .13 2.7" rotation="0 0 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#8be28b" material="emissive:#8be28b;emissiveIntensity:.18"></a-box>
+<a-text value="NORTH MARKET" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$180" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="5" position="-1.8 .13 2.7" rotation="0 0 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#8be28b" material="emissive:#8be28b;emissiveIntensity:.18"></a-box>
+<a-text value="ROOK STATION" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$205" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="6" position="-2.7 .13 2.7" rotation="0 0 0">
+<a-box width="0.98" height=".18" depth="0.98" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#f6b84a" material="emissive:#f6b84a;emissiveIntensity:.18"></a-box>
+<a-text value="FOUNDRY LANE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$80" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="7" position="-2.7 .13 1.8" rotation="0 90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#d28aff" material="emissive:#d28aff;emissiveIntensity:.18"></a-box>
+<a-text value="CHANCE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$105" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="8" position="-2.7 .13 0.9" rotation="0 90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#f6b84a" material="emissive:#f6b84a;emissiveIntensity:.18"></a-box>
+<a-text value="GLASSWORKS" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$130" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="9" position="-2.7 .13 0.0" rotation="0 90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#ff7555" material="emissive:#ff7555;emissiveIntensity:.18"></a-box>
+<a-text value="SILK ARCADE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$155" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="10" position="-2.7 .13 -0.9" rotation="0 90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#ff7555" material="emissive:#ff7555;emissiveIntensity:.18"></a-box>
+<a-text value="CIVIC HALL" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$180" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="11" position="-2.7 .13 -1.8" rotation="0 90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#ddd" material="emissive:#ddd;emissiveIntensity:.18"></a-box>
+<a-text value="WEST STATION" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$205" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="12" position="-2.7 .13 -2.7" rotation="0 90 0">
+<a-box width="0.98" height=".18" depth="0.98" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#b45fff" material="emissive:#b45fff;emissiveIntensity:.18"></a-box>
+<a-text value="THEATRE MILE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$80" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="13" position="-1.8 .13 -2.7" rotation="0 180 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#b45fff" material="emissive:#b45fff;emissiveIntensity:.18"></a-box>
+<a-text value="NIGHT BAZAAR" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$105" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="14" position="-0.9 .13 -2.7" rotation="0 180 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#ddd" material="emissive:#ddd;emissiveIntensity:.18"></a-box>
+<a-text value="TOLL GATE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$130" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="15" position="0.0 .13 -2.7" rotation="0 180 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#d28aff" material="emissive:#d28aff;emissiveIntensity:.18"></a-box>
+<a-text value="CHANCE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$155" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="16" position="0.9 .13 -2.7" rotation="0 180 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#45d6bc" material="emissive:#45d6bc;emissiveIntensity:.18"></a-box>
+<a-text value="GARDEN COURT" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$180" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="17" position="1.8 .13 -2.7" rotation="0 180 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#45d6bc" material="emissive:#45d6bc;emissiveIntensity:.18"></a-box>
+<a-text value="MUSEUM WAY" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$205" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="18" position="2.7 .13 -2.7" rotation="0 180 0">
+<a-box width="0.98" height=".18" depth="0.98" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#ddd" material="emissive:#ddd;emissiveIntensity:.18"></a-box>
+<a-text value="EAST STATION" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$80" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="19" position="2.7 .13 -1.8" rotation="0 -90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#f14a98" material="emissive:#f14a98;emissiveIntensity:.18"></a-box>
+<a-text value="SKYLINE AVE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$105" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="20" position="2.7 .13 -0.9" rotation="0 -90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#f14a98" material="emissive:#f14a98;emissiveIntensity:.18"></a-box>
+<a-text value="GOLD EXCHANGE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$130" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="21" position="2.7 .13 0.0" rotation="0 -90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#d28aff" material="emissive:#d28aff;emissiveIntensity:.18"></a-box>
+<a-text value="CHANCE" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$155" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="22" position="2.7 .13 0.9" rotation="0 -90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#ffd447" material="emissive:#ffd447;emissiveIntensity:.18"></a-box>
+<a-text value="CROWN PLAZA" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$180" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity><a-entity class="tile" data-i="23" position="2.7 .13 1.8" rotation="0 -90 0">
+<a-box width="0.86" height=".18" depth="0.86" color="#171922" material="roughness:.86" shadow="cast:true;receive:true"></a-box>
+<a-box class="band" position="0 .12 -.31" width=".8" height=".09" depth=".17" color="#ddd" material="emissive:#ddd;emissiveIntensity:.18"></a-box>
+<a-text value="GRAND TERMINAL" position="0 .25 0" rotation="-90 0 0" align="center" color="#f7efd2" width="1.55" wrap-count="13"></a-text>
+<a-text value="$205" position="0 .25 .28" rotation="-90 0 0" align="center" color="#a9a69c" width="1.3"></a-text>
+<a-entity class="buildings" position="0 .18 0"></a-entity></a-entity>
+<a-entity id="center" position="0 .05 0"><a-cylinder radius="1.3" height=".18" color="#0e1016"></a-cylinder><a-text value="CITY
+DEEDS" position="0 .12 0" rotation="-90 0 0" align="center" color="#ffd447" width="4"></a-text>
+<a-entity id="dice" class="clickable" position="0 .75 0" animation__float="property:position;dir:alternate;dur:1400;loop:true;to:0 .88 0;easing:easeInOutSine"><a-box width=".55" height=".55" depth=".55" color="#eee8d7" shadow="cast:true"></a-box><a-text id="dieText" value="?" position="0 0 .281" align="center" color="#111" width="2"></a-text></a-entity></a-entity>
+<a-entity id="p0" mixin="token" color="#ffd447" position="2.7 .45 2.7"><a-sphere radius=".1" position="0 .22 0" color="#ffd447"></a-sphere></a-entity><a-entity id="p1" mixin="token" color="#ff596d" position="2.95 .45 2.7"></a-entity><a-entity id="p2" mixin="token" color="#55c2ff" position="2.7 .45 2.95"></a-entity><a-entity id="p3" mixin="token" color="#8be28b" position="2.95 .45 2.95"></a-entity>
+<a-sky color="#080a11"></a-sky><a-entity position="0 5 -11"><a-circle radius="2" color="#ffd447" material="emissive:#ffd447;emissiveIntensity:.6;opacity:.85"></a-circle></a-entity>
+<a-entity id="rig" position="0 7 8" rotation="-32 0 0"><a-camera wasd-controls="acceleration:12"><a-cursor color="#ffd447" fuse="false" raycaster="objects:.clickable,.tile,#dice"></a-cursor></a-camera><a-entity laser-controls="hand:left" raycaster="objects:.clickable,.tile,#dice"></a-entity><a-entity laser-controls="hand:right" raycaster="objects:.clickable,.tile,#dice"></a-entity></a-entity>
+</a-scene><script>
+const P={names:['Old Dock', 'Copper Row', 'Lantern Ward', 'Tax Office', 'North Market', 'Rook Station', 'Foundry Lane', 'Chance', 'Glassworks', 'Silk Arcade', 'Civic Hall', 'West Station', 'Theatre Mile', 'Night Bazaar', 'Toll Gate', 'Chance', 'Garden Court', 'Museum Way', 'East Station', 'Skyline Ave', 'Gold Exchange', 'Chance', 'Crown Plaza', 'Grand Terminal'],cols:['#55c2ff', '#55c2ff', '#8be28b', '#c84b51', '#8be28b', '#8be28b', '#f6b84a', '#d28aff', '#f6b84a', '#ff7555', '#ff7555', '#ddd', '#b45fff', '#b45fff', '#ddd', '#d28aff', '#45d6bc', '#45d6bc', '#ddd', '#f14a98', '#f14a98', '#d28aff', '#ffd447', '#ddd'],price:[80, 105, 130, 155, 180, 205, 80, 105, 130, 155, 180, 205, 80, 105, 130, 155, 180, 205, 80, 105, 130, 155, 180, 205],owner:Array(24).fill(-1),houses:Array(24).fill(0),pos:[(3, 0, 3), (2, 0, 3), (1, 0, 3), (0, 0, 3), (-1, 0, 3), (-2, 0, 3), (-3, 0, 3), (-3, 0, 2), (-3, 0, 1), (-3, 0, 0), (-3, 0, -1), (-3, 0, -2), (-3, 0, -3), (-2, 0, -3), (-1, 0, -3), (0, 0, -3), (1, 0, -3), (2, 0, -3), (3, 0, -3), (3, 0, -2), (3, 0, -1), (3, 0, 0), (3, 0, 1), (3, 0, 2)]};
+const players=[{name:'YOU',cash:1200,at:0,color:'#ffd447',human:true},{name:'VIOLET',cash:1200,at:0,color:'#ff596d'},{name:'COBALT',cash:1200,at:0,color:'#55c2ff'},{name:'MINT',cash:1200,at:0,color:'#8be28b'}];let turn=0,round=1,pending=false,gameover=false;
+const $=s=>document.querySelector(s),msg=t=>$('#msg').textContent=t;function hud(){$('#cash').textContent='$'+players[0].cash;$('#deeds').textContent=P.owner.filter(x=>x===0).length;$('#rivals').textContent=players.slice(1).filter(x=>x.cash>=0).length;$('#turn span').textContent='ROUND '+round;$('#turn strong').textContent=players[turn].name+' TURN';}
+function moveToken(n){let [x,y,z]=P.pos[players[n].at];document.querySelector('#p'+n).setAttribute('animation',`property:position;to:${x*.9+(n%2)*.16} .42 ${z*.9+(n>1?.16:0)};dur:650;easing:easeOutQuad`);}
+function roll(n=turn){if(gameover||pending||n!==turn)return;pending=true;$('#roll').disabled=true;$('#buy').disabled=true;$('#build').disabled=true;let a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6),sum=a+b;let d=$('#dice');d.setAttribute('animation__roll',`property:rotation;to:${360+a*90} ${720+b*90} ${360+sum*45};dur:700;easing:easeOutCubic`);$('#dieText').setAttribute('value',sum);msg(`${players[n].name} rolled ${a} + ${b}.`);let old=players[n].at;players[n].at=(old+sum)%24;if(players[n].at<old){players[n].cash+=200;msg(`${players[n].name} passed Grand Terminal and collected $200.`)}setTimeout(()=>{moveToken(n);land(n)},720)}
+function land(n){let i=players[n].at,pl=players[n],own=P.owner[i];if(i===3||i===14){let tax=i===3?100:140;pl.cash-=tax;msg(`${pl.name} paid ${tax} city tax at ${P.names[i]}.`);return endTurn(n)}if([7,15,21].includes(i)){let cards=[['A transit strike costs $80',-80],['A street festival earns $120',120],['Zoning appeal approved. Earn $70',70],['Storm repairs cost $60',-60],['Tech boom dividend: $150',150]];let c=cards[Math.floor(Math.random()*cards.length)];pl.cash+=c[1];msg(pl.name+': '+c[0]+'.');return endTurn(n)}if([0,6,12,18,23].includes(i)){msg(`${pl.name} rests at ${P.names[i]}.`);return endTurn(n)}if(own<0){msg(`${P.names[i]} is unowned. Deed price: ${P.price[i]}.`);if(pl.human){pending=false;$('#buy').disabled=pl.cash<P.price[i];$('#build').disabled=true;setTimeout(()=>endTurn(n,true),7000)}else{if(pl.cash>P.price[i]+250&&Math.random()>.2)buy(n,i);else endTurn(n)}}else if(own===n){msg(`${pl.name} returned to their ${P.names[i]} deed.`);if(pl.human&&P.houses[i]<3&&pl.cash>=100){pending=false;$('#build').disabled=false;setTimeout(()=>endTurn(n,true),5000)}else endTurn(n)}else{let rent=Math.round(P.price[i]*(.22+P.houses[i]*.22));pl.cash-=rent;players[own].cash+=rent;msg(`${pl.name} paid ${rent} rent to ${players[own].name} at ${P.names[i]}.`);if(pl.cash<0)bankrupt(n);endTurn(n)}hud()}
+function buy(n=turn,i=players[turn].at){let pl=players[n];if(P.owner[i]>=0||pl.cash<P.price[i])return;pl.cash-=P.price[i];P.owner[i]=n;document.querySelector(`.tile[data-i="${i}"] .band`).setAttribute('color',pl.color);msg(`${pl.name} bought the deed to ${P.names[i]} for ${P.price[i]}.`);hud();endTurn(n)}
+function build(){let i=players[0].at;if(P.owner[i]!==0||players[0].cash<100||P.houses[i]>=3)return;players[0].cash-=100;P.houses[i]++;addBuilding(i,0,P.houses[i]);msg(`You raised a tier-${P.houses[i]} tower on ${P.names[i]}. Rent increased.`);hud();endTurn(0)}
+function addBuilding(i,n,level){let holder=document.querySelector(`.tile[data-i="${i}"] .buildings`),b=document.createElement('a-box');b.setAttribute('position',`${-.22+(level-1)*.22} ${.12+level*.07} 0`);b.setAttribute('width','.16');b.setAttribute('depth','.16');b.setAttribute('height',.22+level*.14);b.setAttribute('color',players[n].color);b.setAttribute('material',`emissive:${players[n].color};emissiveIntensity:.18;metalness:.4`);holder.appendChild(b)}
+function aiBuild(n){let owned=P.owner.map((o,i)=>o===n?i:-1).filter(i=>i>=0&&P.houses[i]<3);if(owned.length&&players[n].cash>450&&Math.random()>.45){let i=owned[Math.floor(Math.random()*owned.length)];players[n].cash-=100;P.houses[i]++;addBuilding(i,n,P.houses[i])}}
+function bankrupt(n){P.owner.forEach((o,i)=>{if(o===n){P.owner[i]=-1;P.houses[i]=0;let h=document.querySelector(`.tile[data-i="${i}"] .buildings`);while(h.firstChild)h.removeChild(h.firstChild);document.querySelector(`.tile[data-i="${i}"] .band`).setAttribute('color',P.cols[i])}});document.querySelector('#p'+n).setAttribute('visible',false);msg(players[n].name+' is bankrupt. Their deeds return to the city.')}
+function endTurn(n,wait=false){if(wait){pending=false;return}pending=true;setTimeout(()=>{if(players.slice(1).filter(x=>x.cash>=0).length===0) return win();do{turn=(turn+1)%4;if(turn===0)round++}while(players[turn].cash<0);aiBuild(turn);hud();pending=false;if(turn===0){$('#roll').disabled=false;msg('Your turn. Roll the city dice.')}else setTimeout(()=>roll(turn),700)},1050)}function win(){gameover=true;msg('THE CITY IS YOURS. Every rival is bankrupt. You rule the skyline.');$('#turn strong').textContent='CITY MAGNATE';$('#roll').disabled=true}
+$('#start').onclick=()=>{$('#title').style.display='none';msg('Your token glows gold. Roll the dice to enter the city.')};$('#roll').onclick=()=>roll();$('#buy').onclick=()=>buy();$('#build').onclick=build;$('#dice').addEventListener('click',()=>roll());document.querySelectorAll('.tile').forEach(t=>t.addEventListener('click',()=>{let i=+t.dataset.i,own=P.owner[i];msg(`${P.names[i]} · ${P.price[i]} deed · ${own<0?'UNOWNED':players[own].name} · TOWER ${P.houses[i]}/3`)}));hud();
+</script></body></html>
